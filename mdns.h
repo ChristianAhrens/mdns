@@ -1110,7 +1110,7 @@ mdns_multiquery_send(int sock, const mdns_query_t* query, size_t count, void* bu
 		if (!data)
 			return -1;
 		// Record type
-		data = mdns_htons(data, query[iq].type);
+		data = mdns_htons(data, (uint16_t)query[iq].type);
 		//! Optional unicast response based on local port, class IN
 		data = mdns_htons(data, rclass);
 	}
@@ -1202,7 +1202,7 @@ mdns_answer_add_question_unicast(void* buffer, size_t capacity, void* data,
 	if (remain < 4)
 		return 0;
 
-	data = mdns_htons(data, record_type);
+	data = mdns_htons(data, (uint16_t)record_type);
 	data = mdns_htons(data, MDNS_UNICAST_RESPONSE | MDNS_CLASS_IN);
 
 	return data;
@@ -1218,7 +1218,7 @@ mdns_answer_add_record_header(void* buffer, size_t capacity, void* data, mdns_re
 	if (remain < 10)
 		return 0;
 
-	data = mdns_htons(data, record.type);
+	data = mdns_htons(data, (uint16_t)record.type);
 	data = mdns_htons(data, record.rclass);
 	data = mdns_htonl(data, record.ttl);
 	data = mdns_htons(data, 0);  // Length, to be filled later

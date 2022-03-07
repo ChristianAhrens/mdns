@@ -181,6 +181,12 @@ service_callback(int sock, const struct sockaddr* from, size_t addrlen, mdns_ent
                  uint16_t query_id, uint16_t rtype, uint16_t rclass, uint32_t ttl, const void* data,
                  size_t size, size_t name_offset, size_t name_length, size_t record_offset,
                  size_t record_length, void* user_data) {
+	(void)sock;
+	(void)query_id;
+	(void)name_length;
+	(void)record_offset;
+	(void)record_length;
+
 	(void)sizeof(ttl);
 	if (entry != MDNS_ENTRYTYPE_QUESTION)
 		return 0;
@@ -189,6 +195,7 @@ service_callback(int sock, const struct sockaddr* from, size_t addrlen, mdns_ent
 	const service_t* service = (const service_t*)user_data;
 
 	mdns_string_t fromaddrstr = ip_address_to_string(addrbuffer, sizeof(addrbuffer), from, addrlen);
+	(void)fromaddrstr;
 
 	size_t offset = name_offset;
 	mdns_string_t name = mdns_string_extract(data, size, &offset, namebuffer, sizeof(namebuffer));
@@ -413,6 +420,13 @@ dump_callback(int sock, const struct sockaddr* from, size_t addrlen, mdns_entry_
               uint16_t query_id, uint16_t rtype, uint16_t rclass, uint32_t ttl, const void* data,
               size_t size, size_t name_offset, size_t name_length, size_t record_offset,
               size_t record_length, void* user_data) {
+	(void)sock;
+	(void)query_id;
+	(void)name_length;
+	(void)record_offset;
+	(void)record_length;
+	(void)user_data;
+
 	mdns_string_t fromaddrstr = ip_address_to_string(addrbuffer, sizeof(addrbuffer), from, addrlen);
 
 	size_t offset = name_offset;
@@ -817,7 +831,7 @@ send_mdns_query(mdns_query_t* query, size_t count) {
 		if (res > 0) {
 			for (int isock = 0; isock < num_sockets; ++isock) {
 				if (FD_ISSET(sockets[isock], &readfs)) {
-					int rec = mdns_query_recv(sockets[isock], buffer, capacity, query_callback,
+					int rec = (int)mdns_query_recv(sockets[isock], buffer, capacity, query_callback,
 					                          user_data, query_id[isock]);
 					if (rec > 0)
 						records += rec;
@@ -909,7 +923,7 @@ service_mdns(const char* hostname, const char* service_name, int service_port) {
 	service.record_srv = (mdns_record_t){.name = service.service_instance,
 	                                     .type = MDNS_RECORDTYPE_SRV,
 	                                     .data.srv.name = service.hostname_qualified,
-	                                     .data.srv.port = service.port,
+	                                     .data.srv.port = (uint16_t)service.port,
 	                                     .data.srv.priority = 0,
 	                                     .data.srv.weight = 0,
 	                                     .rclass = 0,
