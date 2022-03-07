@@ -30,6 +30,7 @@
 #undef recvfrom
 #endif
 
+#ifdef BUILD_MDNS_TESTAPP
 static char addrbuffer[64];
 static char entrybuffer[256];
 static char namebuffer[256];
@@ -41,6 +42,7 @@ static struct sockaddr_in6 service_address_ipv6;
 
 static int has_ipv4;
 static int has_ipv6;
+#endif //BUILD_MDNS_TESTAPP
 
 volatile sig_atomic_t running = 1;
 
@@ -60,6 +62,7 @@ typedef struct {
 	mdns_record_t txt_record[2];
 } service_t;
 
+#ifdef BUILD_MDNS_TESTAPP
 static mdns_string_t
 ipv4_address_to_string(char* buffer, size_t capacity, const struct sockaddr_in* addr,
                        size_t addrlen) {
@@ -1030,11 +1033,10 @@ service_mdns(const char* hostname, const char* service_name, int service_port) {
 
 	return 0;
 }
-
+#endif //BUILD_MDNS_TESTAPP
 
 
 #ifdef BUILD_MDNS_TESTAPP
-
 // Dump all incoming mDNS queries and answers
 static int
 dump_mdns(void) {
@@ -1278,4 +1280,4 @@ main(int argc, const char* const* argv) {
 
 	return 0;
 }
-#endif
+#endif //BUILD_MDNS_TESTAPP
