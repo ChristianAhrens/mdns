@@ -1032,6 +1032,9 @@ service_mdns(const char* hostname, const char* service_name, int service_port) {
 }
 
 
+
+#ifdef BUILD_MDNS_TESTAPP
+
 // Dump all incoming mDNS queries and answers
 static int
 dump_mdns(void) {
@@ -1275,3 +1278,4 @@ main(int argc, const char* const* argv) {
 
 	return 0;
 }
+#endif
